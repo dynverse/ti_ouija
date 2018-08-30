@@ -1,6 +1,6 @@
 id: ouija
-docker_repository: dynverse/dynmethods:ouija
-container_url: https://github.com/dynverse/dynmethods/tree/master/containers/ouija
+docker_repository: dynverse/ti_ouija
+container_url: https://github.com/dynverse/ti_ouija
 name: ouija
 type: algorithm
 doi: 10.1101/060442
