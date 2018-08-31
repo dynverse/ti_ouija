@@ -12,6 +12,7 @@ From: dynverse/dynwrap:r
 
 %post
     chmod -R a+r /code
+    chmod a+x /code
     R -e 'devtools::install_github("kieranrcampbell/ouija")'
     R -e 'devtools::install_cran("rstan")'
     R -e 'devtools::install_cran("coda")'
