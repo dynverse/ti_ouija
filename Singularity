@@ -10,15 +10,14 @@ From: dynverse/dynwrap:r
 %labels
     version 0.1.1
 
+%files
+    . /code
+
 %post
-    chmod -R a+r /code
-    chmod a+x /code
+    chmod -R 755 '/code'
     R -e 'devtools::install_github("kieranrcampbell/ouija")'
     R -e 'devtools::install_cran("rstan")'
     R -e 'devtools::install_cran("coda")'
-
-%files
-    . /code
 
 %runscript
     exec Rscript /code/run.R
