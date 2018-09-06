@@ -1,5 +1,6 @@
 id: ouija
 docker_repository: dynverse/ti_ouija
+singularity_collection: 1558
 container_url: https://github.com/dynverse/ti_ouija
 name: ouija
 type: algorithm
