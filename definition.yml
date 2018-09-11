@@ -9,9 +9,6 @@ google_scholar_cluster_id: '5009450964277600738'
 platform: R
 trajectory_types:
 - linear
-- bifurcation
-- convergence
-- multifurcation
 topology_inference: fixed
 license: GPL (>=3)
 preprint_date: '2016-06-23'
