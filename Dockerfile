@@ -1,10 +1,10 @@
 FROM dynverse/dynwrap:r
 
-LABEL version 0.1.2
-
 RUN R -e 'devtools::install_github("kieranrcampbell/ouija")'
 RUN R -e 'devtools::install_cran("rstan")'
 RUN R -e 'devtools::install_cran("coda")'
+
+LABEL version 0.1.2
 
 ADD . /code
 
