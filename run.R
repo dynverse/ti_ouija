@@ -1,3 +1,6 @@
+#!/usr/local/bin/Rscript
+task <- dyncli::main()
+
 library(jsonlite)
 library(readr)
 library(dplyr)
@@ -9,24 +12,16 @@ library(rstan)
 #   ____________________________________________________________________________
 #   Load data                                                               ####
 
-data <- read_rds("/ti/input/data.rds")
-params <- jsonlite::read_json("/ti/input/params.json")
-
-#' @examples
-#' data <- dyntoy::generate_dataset(id = "test", num_cells = 300, num_features = 300, model = "linear") %>% c(., .$prior_information)
-#' params <- yaml::read_yaml("containers/embeddr/definition.yml")$parameters %>%
-#'   {.[names(.) != "forbidden"]} %>%
-#'   map(~ .$default)
-
-expression <- data$expression
+expression <- as.matrix(task$expression)
+params <- task$params
 
 #   ____________________________________________________________________________
 #   Infer trajectory                                                        ####
 
 
 # ouija assumes that a small number of marker genes is used, otherwise the method is too slow
-if (!is.null(data$features_id)) {
-  expression <- expression[, data$features_id]
+if (!is.null(task$priors$features_id)) {
+  expression <- expression[, task$priors$features_id]
 }
 
 # write compiled instance of the stanmodel to HDD
@@ -60,5 +55,9 @@ output <- lst(
 
 #   ____________________________________________________________________________
 #   Save output                                                             ####
-
-write_rds(output, "/ti/output/output.rds")
+dynwrap::wrap_data(cell_ids = names(pseudotime)) %>%
+  dynwrap::add_linear_trajectory(
+    pseudotime = tibble(cell_id = names(pseudotime), pseudotime = pseudotime)
+  ) %>%
+  dynwrap::add_timings(timings = checkpoints) %>%
+  dyncli::write_output(task$output)
