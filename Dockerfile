@@ -6,6 +6,6 @@ RUN R -e 'devtools::install_github("kieranrcampbell/ouija")'
 RUN R -e 'devtools::install_cran("rstan")'
 RUN R -e 'devtools::install_cran("coda")'
 
-COPY definition.yml run.R example.h5 /code/
+COPY definition.yml run.R example.sh /code/
 
 ENTRYPOINT ["/code/run.R"]
