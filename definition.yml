@@ -27,14 +27,9 @@ container:
 wrapper:
   type: linear_trajectory
   topology_inference: fixed
-  trajectory_types:
-  - linear
-  example:
-  input_required:
-  - expression
-  input_optional:
-  - features_id
-
+  trajectory_types: linear
+  input_required: expression
+  input_optional: features_id
 
 parameters:
   - id: iter
