@@ -56,8 +56,8 @@ parameters:
     - hmc
     - vb
     description: |-
-      The type of inference to be performed, either \code{hmc} for Hamiltonian
-      Monte Carlo or \code{vb} for ADVI (Variational Bayes). Note that HMC is typically more accurate
+      The type of inference to be performed, either `hmc` for Hamiltonian
+      Monte Carlo or `vb` for ADVI (Variational Bayes). Note that HMC is typically more accurate
       but VB will be orders of magnitude faster.
   - id: normalise_expression
     type: logical
