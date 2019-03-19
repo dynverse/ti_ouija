@@ -13,7 +13,7 @@ library(rstan)
 #   Load data                                                               ####
 
 expression <- as.matrix(task$expression)
-params <- task$params
+parameters <- task$parameters
 
 #   ____________________________________________________________________________
 #   Infer trajectory                                                        ####
@@ -33,10 +33,10 @@ checkpoints <- list(method_afterpreproc = as.numeric(Sys.time()))
 # run ouija
 oui <- ouija::ouija(
   x = expression,
-  iter = params$iter,
-  response_type = params$response_type,
-  inference_type = params$inference_type,
-  normalise_expression = params$normalise_expression
+  iter = parameters$iter,
+  response_type = parameters$response_type,
+  inference_type = parameters$inference_type,
+  normalise_expression = parameters$normalise_expression
 )
 
 # TIMING: done with method
