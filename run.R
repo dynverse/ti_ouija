@@ -1,32 +1,25 @@
-library(jsonlite)
-library(readr)
-library(dplyr)
-library(purrr)
+#!/usr/local/bin/Rscript
+task <- dyncli::main()
 
-library(ouija)
-library(rstan)
+library(dplyr, warn.conflicts = FALSE)
+library(purrr, warn.conflicts = FALSE)
+library(dynwrap, warn.conflicts = FALSE)
+library(ouija, warn.conflicts = FALSE))
+library(rstan, warn.conflicts = FALSE))
 
 #   ____________________________________________________________________________
 #   Load data                                                               ####
 
-data <- read_rds("/ti/input/data.rds")
-params <- jsonlite::read_json("/ti/input/params.json")
-
-#' @examples
-#' data <- dyntoy::generate_dataset(id = "test", num_cells = 300, num_features = 300, model = "linear") %>% c(., .$prior_information)
-#' params <- yaml::read_yaml("containers/embeddr/definition.yml")$parameters %>%
-#'   {.[names(.) != "forbidden"]} %>%
-#'   map(~ .$default)
-
-expression <- data$expression
+expression <- as.matrix(task$expression)
+parameters <- task$parameters
 
 #   ____________________________________________________________________________
 #   Infer trajectory                                                        ####
 
 
 # ouija assumes that a small number of marker genes is used, otherwise the method is too slow
-if (!is.null(data$features_id)) {
-  expression <- expression[, data$features_id]
+if (!is.null(task$priors$features_id)) {
+  expression <- expression[, task$priors$features_id]
 }
 
 # write compiled instance of the stanmodel to HDD
@@ -38,10 +31,10 @@ checkpoints <- list(method_afterpreproc = as.numeric(Sys.time()))
 # run ouija
 oui <- ouija::ouija(
   x = expression,
-  iter = params$iter,
-  response_type = params$response_type,
-  inference_type = params$inference_type,
-  normalise_expression = params$normalise_expression
+  iter = parameters$iter,
+  response_type = parameters$response_type,
+  inference_type = parameters$inference_type,
+  normalise_expression = parameters$normalise_expression
 )
 
 # TIMING: done with method
@@ -51,14 +44,9 @@ checkpoints$method_aftermethod <- as.numeric(Sys.time())
 pseudotime <- ouija::map_pseudotime(oui) %>%
   setNames(rownames(expression))
 
-# return output
-output <- lst(
-  cell_ids = names(pseudotime),
-  pseudotime = pseudotime,
-  timings = checkpoints
-)
-
 #   ____________________________________________________________________________
 #   Save output                                                             ####
-
-write_rds(output, "/ti/output/output.rds")
+dynwrap::wrap_data(cell_ids = names(pseudotime)) %>%
+  dynwrap::add_linear_trajectory(pseudotime = pseudotime) %>%
+  dynwrap::add_timings(timings = checkpoints) %>%
+  dyncli::write_output(task$output)
