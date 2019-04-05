@@ -1,13 +1,11 @@
 #!/usr/local/bin/Rscript
 task <- dyncli::main()
 
-library(jsonlite)
-library(readr)
-library(dplyr)
-library(purrr)
-
-library(ouija)
-library(rstan)
+library(dplyr, warn.conflicts = FALSE)
+library(purrr, warn.conflicts = FALSE)
+library(dynwrap, warn.conflicts = FALSE)
+library(ouija, warn.conflicts = FALSE))
+library(rstan, warn.conflicts = FALSE))
 
 #   ____________________________________________________________________________
 #   Load data                                                               ####
@@ -46,18 +44,9 @@ checkpoints$method_aftermethod <- as.numeric(Sys.time())
 pseudotime <- ouija::map_pseudotime(oui) %>%
   setNames(rownames(expression))
 
-# return output
-output <- lst(
-  cell_ids = names(pseudotime),
-  pseudotime = pseudotime,
-  timings = checkpoints
-)
-
 #   ____________________________________________________________________________
 #   Save output                                                             ####
 dynwrap::wrap_data(cell_ids = names(pseudotime)) %>%
-  dynwrap::add_linear_trajectory(
-    pseudotime = tibble(cell_id = names(pseudotime), pseudotime = pseudotime)
-  ) %>%
+  dynwrap::add_linear_trajectory(pseudotime = pseudotime) %>%
   dynwrap::add_timings(timings = checkpoints) %>%
   dyncli::write_output(task$output)
