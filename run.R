@@ -4,8 +4,8 @@ task <- dyncli::main()
 library(dplyr, warn.conflicts = FALSE)
 library(purrr, warn.conflicts = FALSE)
 library(dynwrap, warn.conflicts = FALSE)
-library(ouija, warn.conflicts = FALSE))
-library(rstan, warn.conflicts = FALSE))
+library(ouija, warn.conflicts = FALSE)
+library(rstan, warn.conflicts = FALSE)
 
 #   ____________________________________________________________________________
 #   Load data                                                               ####
